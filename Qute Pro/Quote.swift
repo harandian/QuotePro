@@ -13,27 +13,16 @@ class Quote: NSObject {
     var mainText = String()
     var author = String()
     
-    
-    //    init(withText:String, andAuthor:String) {
-    //        mainText = withText
-    //        author = andAuthor
-    //    }
-    
-    
-    
-    
     let mysession = URLSession (configuration: .default)
     var dataTask: URLSessionDataTask?
     
     
-    func getSearchResults() {
-        
-        //dataTask?.cancel()
+    func getSearchResults(completion: @escaping () -> (Void)) {
         
         let myUrl = URL(string:"https://api.forismatic.com/api/1.0/?method=getQuote&lang=en&format=json")!
         
         dataTask = mysession.dataTask(with: myUrl, completionHandler: { (data, response, error) in
-            
+        
             defer { self.dataTask = nil }
             
             if let error = error {
@@ -50,30 +39,30 @@ class Quote: NSObject {
                     
                     if let tempText = myDictionary["quoteText"] as? String {
                         self.mainText = tempText
-                        print("the quote text:",self.mainText)
+                        //print("the quote text:",self.mainText)
                     }
                     
                     if let tempText = myDictionary["quoteAuthor"] as? String {
                         self.author = tempText
-                        print("the quote autor is:", self.author)
+                        //print("the quote autor is:", self.author)
                     }
+                    completion()
+                }
+          
+                if let tempJson = json {
+                  //  print(tempJson)
                     
                 }
-                //  self.setUpQute(webQuote: json)
-                
-                print(json)
-                
+
                 
             }
-            
         })
         
         dataTask?.resume()
+        //completion()
     }
     
-    //    func setUpQute(webQuote: Dictionary) {
-    //
-    //        self.mainText = webQuote[value(forKey: "quoteText")]
-    //
-    //    }
 }
+
+
+
